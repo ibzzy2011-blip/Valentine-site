@@ -3,291 +3,123 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Valentine 💜</title>
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<title>Valentine Page</title>
 <style>
-  /* ---------- GLOBAL STYLES ---------- */
-  * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #ffb3c6, #d580ff);
+    margin: 0;
+    padding: 0;
+    background: #fff0f5;
     overflow-x: hidden;
-    color: #fff;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
   }
-  .center {
-    position: absolute;
-    top:50%; left:50%;
-    transform: translate(-50%,-50%);
-    text-align:center;
-  }
-  button {
-    padding: 12px 25px;
-    border:none;
-    border-radius:8px;
-    background: #ff5fa2;
-    color:white;
-    font-weight:bold;
-    font-size:16px;
-    cursor:pointer;
-    transition: 0.3s;
-  }
-  button:hover { background:#ff3399; }
-  .hidden { display:none; }
 
-  /* ---------- FLOATING HEARTS ---------- */
+  /* Floating hearts */
   .heart {
-    position: fixed;
-    width: 20px; height:20px;
-    background: #ff6699;
-    transform: rotate(45deg);
-    animation: float 7s linear infinite;
-    z-index: 1;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: pink;
+    transform: rotate(-45deg);
+    animation: float 6s infinite;
   }
   .heart::before,
   .heart::after {
     content: "";
     position: absolute;
-    width: 20px; height:20px;
-    background: #ff6699;
-    border-radius:50%;
+    width: 30px;
+    height: 30px;
+    background-color: pink;
+    border-radius: 50%;
   }
-  .heart::before { top:-10px; left:0; }
-  .heart::after { left:-10px; top:0; }
+  .heart::before { top: -15px; left: 0; }
+  .heart::after { left: 15px; top: 0; }
 
   @keyframes float {
-    0% { transform: translateY(100vh) rotate(45deg); opacity:1; }
-    100% { transform: translateY(-100vh) rotate(45deg); opacity:0; }
+    0% { transform: translateY(0) rotate(-45deg); opacity: 1; }
+    100% { transform: translateY(-1000px) rotate(-45deg); opacity: 0; }
   }
 
-  /* ---------- TYPING EFFECT ---------- */
-  .typing {
-    border-right: .15em solid #fff;
-    white-space: nowrap;
-    overflow: hidden;
+  /* Envelope letters */
+  .envelope-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    gap: 20px;
   }
-
-  /* ---------- PROGRESS BAR ---------- */
-  .progress-container {
-    width: 90%; height: 10px;
-    background:#ffb3c6;
-    border-radius:5px;
-    margin:20px auto;
-    overflow:hidden;
-  }
-  .progress-bar {
-    width:0%; height:100%;
-    background:#ff3399;
-    transition:0.5s;
-  }
-
-  /* ---------- ENVELOPES ---------- */
-  .envelope {
-    width: 150px; height: 100px;
-    background:#fff;
-    color:#333;
-    border-radius: 8px;
-    position: relative;
-    margin:30px auto;
-    cursor:pointer;
-    overflow:hidden;
-    transform-style: preserve-3d;
-    perspective:1000px;
-  }
-  .envelope .flap {
-    position:absolute; width:150px; height:50px;
-    background:#ff5fa2;
-    top:0; left:0;
-    transform-origin:top;
-    transform: rotateX(0deg);
-    transition: 0.6s;
-  }
-  .envelope.open .flap { transform: rotateX(-180deg); }
   .letter {
-    position:absolute; top:0; left:0; width:100%; height:100%;
-    padding:10px; color:#333; background:#fff; font-family:'Dancing Script', cursive;
-    transform: translateY(100%); transition:0.6s;
+    width: 80px;
+    height: 100px;
+    background: #ffcad4;
+    border-radius: 5px;
+    position: relative;
+    transform: rotateX(90deg);
+    transform-origin: top;
+    animation: unfold 1s forwards;
+    cursor: pointer;
   }
-  .envelope.open .letter { transform: translateY(0); }
+  .letter::before {
+    content: "💌";
+    font-size: 40px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
 
+  @keyframes unfold {
+    to { transform: rotateX(0deg); }
+  }
+
+  /* Typing effect */
+  .text-container {
+    margin-top: 50px;
+    font-size: 24px;
+    color: #d6336c;
+    min-height: 30px;
+  }
 </style>
 </head>
 <body>
 
-<!-- FLOATING HEARTS -->
+<div class="envelope-container">
+  <div class="letter" onclick="typeText('H')"></div>
+  <div class="letter" onclick="typeText('E')"></div>
+  <div class="letter" onclick="typeText('A')"></div>
+  <div class="letter" onclick="typeText('R')"></div>
+  <div class="letter" onclick="typeText('T')"></div>
+  <div class="letter" onclick="typeText('S')"></div>
+</div>
+
+<div class="text-container" id="typed-text"></div>
+
 <script>
-  for(let i=0;i<30;i++){
-    let heart=document.createElement('div');
-    heart.classList.add('heart');
-    heart.style.left=Math.random()*100+'vw';
-    heart.style.animationDuration=(5+Math.random()*5)+'s';
-    heart.style.width=20+Math.random()*10+'px';
-    heart.style.height=20+Math.random()*10+'px';
+  // Floating hearts generator
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.animationDuration = 4 + Math.random() * 3 + 's';
     document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 7000);
   }
-</script>
+  setInterval(createHeart, 300);
 
-<!-- ---------- PAGES ---------- -->
-
-<!-- 1. Landing Page -->
-<div id="page1" class="center">
-  <h1 style="font-family:'Dancing Script', cursive; font-size:2.5em;">Welcome, Love 💜</h1>
-  <p>Click Next to see your surprise</p>
-  <button onclick="nextPage('page1','page2')">Next</button>
-</div>
-
-<!-- 2. Envelope Intro -->
-<div id="page2" class="center hidden">
-  <div class="envelope" onclick="openEnvelope(this)">
-    <div class="flap"></div>
-    <div class="letter typing" id="letterIntro"></div>
-  </div>
-  <button id="next2" class="hidden" onclick="nextPage('page2','page3')">Next</button>
-</div>
-
-<!-- 3. Heart Catch Game -->
-<div id="page3" class="center hidden">
-  <h2>Catch 5 Hearts 💗</h2>
-  <div class="progress-container">
-    <div class="progress-bar" id="heartProgress"></div>
-  </div>
-  <button id="next3" class="hidden" onclick="nextPage('page3','page4')">Next</button>
-</div>
-
-<!-- 4. Quiz -->
-<div id="page4" class="center hidden">
-  <h2>Answer the questions 💜</h2>
-  <div id="quizContainer"></div>
-  <button id="next4" class="hidden" onclick="nextPage('page4','page5')">Next</button>
-</div>
-
-<!-- 5. Flashbacks -->
-<div id="page5" class="center hidden">
-  <div id="flashbackText" class="typing" style="font-size:1.2em; max-width:600px;"></div>
-  <button id="next5" class="hidden" onclick="nextPage('page5','page6')">Next</button>
-</div>
-
-<!-- 6. Envelopes Letters -->
-<div id="page6" class="center hidden">
-  <div class="envelope" onclick="openEnvelope(this)">
-    <div class="flap"></div>
-    <div class="letter typing">Letter 1: You make my heart smile every day 💜</div>
-  </div>
-  <div class="envelope" onclick="openEnvelope(this)">
-    <div class="flap"></div>
-    <div class="letter typing">Letter 2: I cherish every moment with you 💜</div>
-  </div>
-  <button id="next6" class="hidden" onclick="nextPage('page6','page7')">Next</button>
-</div>
-
-<!-- 7. Final Love Message -->
-<div id="page7" class="center hidden" style="max-width:700px; font-size:1.2em; font-family:'Dancing Script', cursive;">
-  <div id="finalMessage" class="typing">
-  My Baby,
-  If you’re reading this, it means you made it all the way here… and that alone makes me smile.
-  You mean more to me than words can say. Every moment with you is precious…
-  Forever Yours 💜
-  </div>
-</div>
-
-<script>
-/* ---------- PAGE NAVIGATION ---------- */
-function nextPage(current,next){
-  document.getElementById(current).classList.add('hidden');
-  document.getElementById(next).classList.remove('hidden');
-}
-
-/* ---------- ENVELOPE FUNCTION ---------- */
-function openEnvelope(env){
-  env.classList.add('open');
-  let letter=env.querySelector('.letter');
-  let nextBtn=env.parentElement.querySelector('button');
-  let msg=letter.innerText;
-  typeText(letter,msg,50);
-  nextBtn.classList.remove('hidden');
-}
-
-/* ---------- TYPING EFFECT ---------- */
-function typeText(element,text,speed){
-  element.innerHTML='';
-  let i=0;
-  let timer=setInterval(()=>{
-    element.innerHTML+=text.charAt(i);
-    i++;
-    if(i>=text.length) clearInterval(timer);
-  },speed);
-}
-
-/* ---------- HEART CATCH GAME ---------- */
-let heartsCaught=0;
-function createHeart(){
-  let h=document.createElement('div');
-  h.className='heart';
-  h.style.left=Math.random()*90+'vw';
-  h.style.top='0px';
-  h.onclick=function(){
-    heartsCaught++;
-    updateProgress();
-    h.remove();
-    if(heartsCaught>=5) document.getElementById('next3').classList.remove('hidden');
-  };
-  document.getElementById('page3').appendChild(h);
-}
-function updateProgress(){
-  let bar=document.getElementById('heartProgress');
-  bar.style.width=(heartsCaught*20)+'%';
-}
-setInterval(createHeart,800);
-
-/* ---------- QUIZ ---------- */
-const quizQuestions=[
-  {q:"What is my favourite nickname to call you?",options:["Baby","Potato","Mama","Pooja"],answer:2},
-  {q:"Which day did we start dating?",options:["15/8/2025","24/9/2025","17/8/2001","23/9/2025"],answer:3},
-  {q:"What is something I really want to eat?",options:["Biriyani","YOU","Pizza","Burger"],answer:1},
-  {q:"What is something I really want to do with you?",options:["Marry you","Spend life","Go on trips","Cuddle"],answer:-1} // all correct
-];
-let quizIndex=0;
-function showQuiz(){
-  if(quizIndex>=quizQuestions.length){
-    document.getElementById('next4').classList.remove('hidden');
-    return;
+  // Typing effect
+  let fullText = '';
+  const typedElement = document.getElementById('typed-text');
+  function typeText(letter) {
+    fullText += letter;
+    let i = 0;
+    typedElement.innerHTML = '';
+    function typing() {
+      if (i < fullText.length) {
+        typedElement.innerHTML += fullText[i];
+        i++;
+        setTimeout(typing, 200);
+      }
+    }
+    typing();
   }
-  let q=quizQuestions[quizIndex];
-  let container=document.getElementById('quizContainer');
-  container.innerHTML=`<p>${q.q}</p>`;
-  q.options.forEach((opt,i)=>{
-    let btn=document.createElement('button');
-    btn.innerText=opt;
-    btn.onclick=function(){
-      if(q.answer===-1 || i===q.answer) alert("YAYAYAYA U DID IT BABY,U IS SO SMART");
-      else alert("Awww,LETS GIVE IT ANOTHER TRY,COME ON U CAN DO IT");
-      quizIndex++;
-      showQuiz();
-    };
-    container.appendChild(btn);
-  });
-}
-showQuiz();
-
-/* ---------- FLASHBACKS ---------- */
-const flashbacks=[
-  "I miss the times we used to stay on calls for a really long time and wouldn’t stop yapping…",
-  "The way you would say 'ok bye' when you were mad and wanted attention…",
-  "The way we used to have romantic talks and baby each other like small children…",
-  "I still remember the day you hugged me, pulled my face closer, and kissed my cheeks… goosebumps 💜"
-];
-let flashIndex=0;
-function showFlashbacks(){
-  if(flashIndex>=flashbacks.length){
-    document.getElementById('next5').classList.remove('hidden');
-    return;
-  }
-  let text=document.getElementById('flashbackText');
-  typeText(text,flashbacks[flashIndex],50);
-  flashIndex++;
-  setTimeout(showFlashbacks,flashbacks[flashIndex-1].length*60+500);
-}
-showFlashbacks();
 </script>
 
 </body>
